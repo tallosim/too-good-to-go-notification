@@ -40,6 +40,8 @@ pb = Pushbullet(PUSHBULLET_TOKEN)
 
 print("Starting Too Good To Go notification script, press Ctrl+C to stop")
 print(f"Checking for {args.category.capitalize()}...")
+print()
+
 prev_available_items = dict()
 
 
@@ -80,7 +82,7 @@ try:
             prev_available_items[item['item']['item_id']] = item['items_available']
         
         if send_mail:
-            send_notification(items)
+            send_notification(items, args.category)
         
         print("--------------------")
         time.sleep(args.interval)
