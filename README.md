@@ -11,6 +11,7 @@ Python version: 3.7+
 
     ```bash
     git clone https://github.com/tallosim/too-good-to-go-notification.git
+    cd too-good-to-go-notification
     pip install -r requirements.txt
     ```
 
