@@ -17,7 +17,7 @@ parser = argparse.ArgumentParser(description='Send notification if Too Good To G
 
 parser.add_argument('-i', '--interval', type=int, default=60, help='Interval in seconds between checks. Default is 60 seconds.')
 parser.add_argument('-t', '--test', action='store_true', help='Test notification.')
-parser.add_argument('-c', '--category', type=str, default="GROCERIES", help='Category to check. Default is GROCERIES.')
+parser.add_argument('-c', '--category', type=str, default=None, help='Category to check. Default is GROCERIES.')
 
 args = parser.parse_args()
 
@@ -39,14 +39,14 @@ pb = Pushbullet(PUSHBULLET_TOKEN)
 
 
 print("Starting Too Good To Go notification script, press Ctrl+C to stop")
-print(f"Checking for {args.category.capitalize()}...")
+print(f"Checking for {'items' if args.category == None else args.category.capitalize()}...")
 print()
 
 prev_available_items = dict()
 
 
 def send_notification(items, category):
-    title = "Too Good To Go - " + category.capitalize()
+    title = "Too Good To Go - " + "Item Watcher" if category == None else category.capitalize()
     rows = list()
 
     for item in items:
@@ -66,7 +66,10 @@ try:
     while True:
         print(datetime.now())
         
-        items = tgtg_client.get_items(item_categories=[args.category])
+        if args.category == None:
+            items = tgtg_client.get_items()
+        else:
+            items = tgtg_client.get_items(item_categories=[args.category])
 
         send_mail = False
 
