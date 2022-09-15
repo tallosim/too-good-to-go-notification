@@ -16,8 +16,8 @@ load_dotenv()
 parser = argparse.ArgumentParser(description='Send notification if Too Good To Go items are available.')
 
 parser.add_argument('-i', '--interval', type=int, default=60, help='Interval in seconds between checks. Default is 60 seconds.')
-parser.add_argument('-t', '--test', action='store_true', help='Test notification.')
-parser.add_argument('-c', '--category', type=str, default=None, help='Category to check. Default is GROCERIES.')
+parser.add_argument('-c', '--category', type=str, default=None, help='Category to check. Default is every item category.')
+parser.add_argument('-t', '--test', action='store_true', help='Test the checkers without sending notification.')
 
 args = parser.parse_args()
 

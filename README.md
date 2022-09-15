@@ -33,17 +33,17 @@ Python version: 3.7+
 ## Usage
 
 ```text
-usage: send_notification.py [-h] [-i INTERVAL] [-t] [-c CATEGORY]
+usage: send_notification.py [-h] [-i INTERVAL] [-c CATEGORY] [-t]
 
 Send notification if Too Good To Go items are available.
 
 optional arguments:
   -h, --help            show this help message and exit
   -i INTERVAL, --interval INTERVAL
-                        Interval in seconds between checks. Default is 10 seconds.
-  -t, --test            Test notification.
+                        Interval in seconds between checks. Default is 60 seconds.
   -c CATEGORY, --category CATEGORY
-                        Category to check. Default is GROCERIES
+                        Category to check. Default is every item category.
+  -t, --test            Test the checkers without sending notification.
 ```
 
 ## TODO
