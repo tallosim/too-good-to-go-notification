@@ -13,11 +13,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-parser = argparse.ArgumentParser(description='Send notification if Too Good To Go items are available.')
+parser = argparse.ArgumentParser(
+    description='Send notification if Too Good To Go items are available.')
 
-parser.add_argument('-i', '--interval', type=int, default=60, help='Interval in seconds between checks. Default is 60 seconds.')
-parser.add_argument('-c', '--category', type=str, default=None, help='Category to check. Default is every item category.')
-parser.add_argument('-t', '--test', action='store_true', help='Test the checkers without sending notification.')
+parser.add_argument('-i', '--interval', type=int, default=60,
+                    help='Interval in seconds between checks. Default is 60 seconds.')
+parser.add_argument('-c', '--category', type=str, default=None,
+                    help='Category to check. Default is every item category.')
+parser.add_argument('-t', '--test', action='store_true',
+                    help='Test the checkers without sending notification.')
 
 args = parser.parse_args()
 
@@ -27,7 +31,9 @@ with open(CREDTENIALS_PATH, 'r') as openfile:
     credentials = json.load(openfile)
 
 tgtg_client = TgtgClient(access_token=credentials['access_token'],
-                    refresh_token=credentials['refresh_token'], user_id=credentials['user_id'])
+                         refresh_token=credentials['refresh_token'],
+                         user_id=credentials['user_id'],
+                         cookie=credentials['cookie'])
 
 
 PUSHBULLET_TOKEN = os.getenv('PUSHBULLET_TOKEN')
@@ -46,16 +52,17 @@ prev_available_items = dict()
 
 
 def send_notification(items, category):
-    title = "Too Good To Go - " + "Item Watcher" if category == None else category.capitalize()
+    title = "Too Good To Go - " + \
+        "Item Watcher" if category == None else category.capitalize()
     rows = list()
 
     for item in items:
         if item['items_available'] > 0:
             rows.append(f"{item['display_name']} | {item['items_available']}")
-    
+
     if len(rows) == 0:
         return
-    
+
     if not args.test:
         pb.push_note(title, "\n".join(rows))
 
@@ -65,7 +72,7 @@ def send_notification(items, category):
 try:
     while True:
         print(datetime.now())
-        
+
         if args.category == None:
             items = tgtg_client.get_items()
         else:
@@ -73,20 +80,20 @@ try:
 
         send_mail = False
 
-        for item in items:        
+        for item in items:
             if item['items_available'] > 0:
                 if item['item']['item_id'] not in prev_available_items:
                     send_mail = True
                 elif prev_available_items[item['item']['item_id']] == 0:
                     send_mail = True
-                    
+
                 print(f"{item['display_name']} | {item['items_available']}")
-                
+
             prev_available_items[item['item']['item_id']] = item['items_available']
-        
+
         if send_mail:
             send_notification(items, args.category)
-        
+
         print("--------------------")
         time.sleep(args.interval)
 
