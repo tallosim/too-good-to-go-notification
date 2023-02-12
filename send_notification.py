@@ -99,3 +99,11 @@ try:
 
 except KeyboardInterrupt:
     print("Exiting...")
+
+except Exception as e:
+    print(e)
+
+    if not args.test:
+        pb.push_note("Too Good To Go - Error", str(e))
+
+    sys.exit()
