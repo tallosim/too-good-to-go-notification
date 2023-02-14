@@ -1,5 +1,3 @@
-from itertools import count
-from turtle import pen
 from tgtg import TgtgClient
 from pushbullet import Pushbullet
 import json
