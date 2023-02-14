@@ -43,8 +43,7 @@ pb = Pushbullet(PUSHBULLET_TOKEN)
 
 
 print("Starting Too Good To Go notification script, press Ctrl+C to stop")
-print(f"Checking for {'items' if args.category == None else args.category.capitalize()}...")
-print()
+print(f"Checking for {'items' if args.category == None else args.category.capitalize()}...\n")
 
 prev_available_items = dict()
 
@@ -52,18 +51,13 @@ prev_available_items = dict()
 def send_notification(items, category):
     title = "Too Good To Go - " + \
         "Item Watcher" if category == None else category.capitalize()
-    rows = list()
 
     for item in items:
         if item['items_available'] > 0:
-            rows.append(f"{item['display_name']} | {item['items_available']}")
-
-    if len(rows) == 0:
-        return
-
-    if not args.test:
-        pb.push_note(title, "\n".join(rows))
-
+            pb.push_link(title,
+                         f"https://share.toogoodtogo.com/item/{item['item']['item_id']}",
+                         f"{item['display_name']}: {item['items_available']} ")
+            
     print("Notification sent")
 
 
@@ -89,7 +83,7 @@ try:
 
             prev_available_items[item['item']['item_id']] = item['items_available']
 
-        if send_mail:
+        if send_mail and not args.test:
             send_notification(items, args.category)
 
         print("--------------------")
