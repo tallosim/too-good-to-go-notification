@@ -24,7 +24,7 @@ If you use this tool you do it at your own risk. Too Good To Go may stop you fro
     ```
 
 2. Create [Too Good To Go](https://toogoodtogo.com/) Credentials.
-    You should receive an email from *Too Good To Go*. The will wait until you validate the login by clicking the link inside the email.
+    You should receive an email from *Too Good To Go*. It will wait until you validate the login by clicking the link inside the email.
     Once you clicked the link, you will get credentials and be able to use them
 
     ```bash
