@@ -82,6 +82,7 @@ while True:
                 item_id in prev_available_items and \
                     item['items_available'] > prev_available_items[item_id]:
                 new_available_items.append(item_id)
+                print(f"New items available for {item['display_name']}: {item['items_available']}")
 
             prev_available_items[item_id] = item['items_available']
 
