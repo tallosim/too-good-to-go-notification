@@ -49,20 +49,22 @@ prev_available_items = dict()
 
 
 def send_notification(items, category):
-    title = "Too Good To Go - " + \
+    title = "🛒 Too Good To Go - " + \
         "Item Watcher" if category == None else category.capitalize()
 
     for item in items:
         if item['items_available'] > 0:
-            pb.push_link(title,
-                         f"https://share.toogoodtogo.com/item/{item['item']['item_id']}",
-                         f"{item['display_name']}: {item['items_available']} ")
-            
+            pb.push_link(title=title,
+                         url=f"https://share.toogoodtogo.com/item/{item['item']['item_id']}",
+                         body=f"{item['display_name']}: {item['items_available']} ")
+
     print("Notification sent")
 
 
-try:
-    while True:
+error_count = 0
+
+while True:
+    try:
         print(datetime.now())
 
         if args.category == None:
@@ -72,30 +74,38 @@ try:
 
         send_mail = False
 
+        new_available_items = list()
         for item in items:
-            if item['items_available'] > 0:
-                if item['item']['item_id'] not in prev_available_items:
-                    send_mail = True
-                elif prev_available_items[item['item']['item_id']] == 0:
-                    send_mail = True
+            item_id = item['item']['item_id']
 
-                print(f"{item['display_name']} | {item['items_available']}")
+            if item['items_available'] > 0 and \
+                item_id in prev_available_items and \
+                    item['items_available'] > prev_available_items[item_id]:
+                new_available_items.append(item_id)
 
-            prev_available_items[item['item']['item_id']] = item['items_available']
+            prev_available_items[item_id] = item['items_available']
 
-        if send_mail and not args.test:
+        if len(new_available_items) > 0 and not args.test:
             send_notification(items, args.category)
 
-        print("--------------------")
+        print("----------------------------------")
         time.sleep(args.interval)
 
-except KeyboardInterrupt:
-    print("Exiting...")
+    except KeyboardInterrupt:
+        print("Exiting...")
+        break
 
-except Exception as e:
-    print(e)
+    except Exception as e:
+        print(e)
+        if not args.test:
+            pb.push_note("Too Good To Go - Error", str(e))
 
-    if not args.test:
-        pb.push_note("Too Good To Go - Error", str(e))
+        error_count += 1
+        if error_count >= 3:
+            print("Too many errors, exiting...")
+            break
 
-    sys.exit()
+        print(f"Retrying in {args.interval} seconds...")
+        time.sleep(args.interval)
+
+sys.exit()
