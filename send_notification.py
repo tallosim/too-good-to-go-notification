@@ -87,7 +87,7 @@ while True:
             prev_available_items[item_id] = item['items_available']
 
         if len(new_available_items) > 0 and not args.test:
-            send_notification(items, args.category)
+            send_notification(new_available_items, args.category)
 
         print("----------------------------------")
         time.sleep(args.interval)
