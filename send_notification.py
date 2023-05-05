@@ -72,18 +72,21 @@ while True:
         else:
             items = tgtg_client.get_items(item_categories=[args.category])
 
-        send_mail = False
-
         new_available_items = list()
         for item in items:
             item_id = item['item']['item_id']
 
-            if item['items_available'] > 0 and \
-                item_id in prev_available_items and \
-                    item['items_available'] > prev_available_items[item_id]:
-                new_available_items.append(item)
-                print(f"New items available for {item['display_name']}: {item['items_available']}")
-
+            if item['items_available'] > 0:
+                # If item is not seen before
+                if item_id not in prev_available_items:
+                    new_available_items.append(item)
+                    print(f"New items available for {item['display_name']}: {item['items_available']}")
+                
+                # If item is seen before but more items are available
+                elif item['items_available'] > prev_available_items[item_id]:
+                    new_available_items.append(item)
+                    print(f"New items available for {item['display_name']}: {item['items_available']}")
+            
             prev_available_items[item_id] = item['items_available']
 
         if len(new_available_items) > 0 and not args.test:
