@@ -16,7 +16,7 @@ args = parser.parse_args()
 EMAIL_ADDRESS = os.getenv('EMAIL_ADDRESS') or args.email
 if EMAIL_ADDRESS == None:
     print("EMAIL_ADDRESS not set")
-    sys.exit()
+    sys.exit(1)
 
 client = TgtgClient(email=EMAIL_ADDRESS)
 credentials = client.get_credentials()
