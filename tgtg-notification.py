@@ -3,7 +3,6 @@ import json
 import base64
 import time
 import random
-import datetime
 import asyncio
 from dotenv import load_dotenv
 
@@ -37,7 +36,6 @@ tgtg_client = TgtgClient(
 # Initialize Pushbullet client
 pushbullet_client = None
 PUSHBULLET_TOKEN = os.getenv("PUSHBULLET_TOKEN")
-print(PUSHBULLET_TOKEN)
 
 if PUSHBULLET_TOKEN == None or PUSHBULLET_TOKEN == "":
     print("No Pushbullet token provided, Pushbullet notifications will not be sent")
@@ -171,7 +169,7 @@ if __name__ == "__main__":
     # Check if items are available every 30 seconds
     while True:
         try:
-            print(f"{datetime.datetime.now()} - Checking for items...")
+            print("Checking for items...")
 
             # Check if items are available
             check_items(prev_available_items, True)

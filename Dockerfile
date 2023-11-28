@@ -11,4 +11,4 @@ COPY tgtg-notification.py /usr/app/
 RUN pip install -r requirements.txt
 
 # Run app.py when the container launches
-CMD python tgtg-notification.py
+CMD python -u tgtg-notification.py
