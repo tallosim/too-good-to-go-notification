@@ -3,6 +3,8 @@
 A simple CLI tool, what can send notification to your phone if a favorite [Too Good To Go](https://toogoodtogo.com/) item becomes available.
 The script talks with the [TooGoodToGo](https://toogoodtogo.com/) API via the [tgtg-python](https://github.com/ahivert/tgtg-python) client.
 
+It can send notification to your phone via [Pushbullet](https://www.pushbullet.com/) or [Telegram](https://telegram.org/).
+
 Python version: 3.7+
 
 ## Disclaimer
@@ -28,30 +30,44 @@ If you use this tool you do it at your own risk. Too Good To Go may stop you fro
     Once you clicked the link, you will get credentials and be able to use them
 
     ```bash
-    python create_credtentials.py -e <YOUR_EMAIL@EXAMPLE.COM>
+    python ctgtg-credtentials.py -e <YOUR_EMAIL@EXAMPLE.COM>
     ```
 
-3. Get your [Pushbullet](https://www.pushbullet.com/) token and put into `.env` file.
-    [How do I setup pushbullet notifications?](https://myspool.com/content/how-do-i-setup-pushbullet-notifications)
-  
-    ```env
-    PUSHBULLET_TOKEN = "<YOUR_TOKEN>"
+3. Add your credentials, API tokens and other settings to `.env` file. To get your Pushbullet token, you can follow the [How do I setup pushbullet notifications?](https://myspool.com/content/how-do-i-setup-pushbullet-notifications) guide. To get your Telegram token, you can follow the [Telegram: From BotFather to 'Hello World'](https://core.telegram.org/bots/tutorial) guide.
+
+    ```conf
+    # Too Good To Go Credentials - JSON base64 encoded
+    TGTG_CREDENTIALS=<base64 encoded json>
+
+    # Pushbullet credentials, chat id and device id
+    PUSHBULLET_TOKEN=<token>
+    PUSHBULLET_CHAT_ID=<chat id>
+    PUSHBULLET_DEVICE_ID=<device id>
+
+    # Telegram credentials and chat id
+    TELEGRAM_TOKEN=<token>
+    TELEGRAM_CHAT_ID=<chat id>
     ```
 
 ## Usage
 
-```text
-usage: send_notification.py [-h] [-i INTERVAL] [-c CATEGORY] [-t]
+If you want to run the script manually, you can do it with the following command:
 
-Send notification if Too Good To Go items are available.
+```bash
+python tgtg-notification.py
+```
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -i INTERVAL, --interval INTERVAL
-                        Interval in seconds between checks. Default is 60 seconds.
-  -c CATEGORY, --category CATEGORY
-                        Category to check. Default is every item category.
-  -t, --test            Test the checkers without sending notification.
+Or you can use the docker image:
+
+```bash
+docker run -d --name tgtg-notification \
+    -e TGTG_CREDENTIALS=<base64_encoded_json> \
+    -e PUSHBULLET_TOKEN=<token> \
+    -e PUSHBULLET_CHAT_ID=<chat_id> \
+    -e PUSHBULLET_DEVICE_ID=<device_id> \
+    -e TELEGRAM_TOKEN=<token> \
+    -e TELEGRAM_CHAT_ID=<chat_id> \
+    tallosim/tgtg-notification
 ```
 
 ## TODO
